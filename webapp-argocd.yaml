@@ -5,7 +5,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/YOUR-REPO/your-project.git'
+    repoURL: 'https://github.com/sidhuni/webapp-annotations.git'
     targetRevision: main
     path: webapp-chart
   destination:
