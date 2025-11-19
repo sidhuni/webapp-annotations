@@ -2,8 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "webapp-chart.fullname" . }}
+  name: {{ include "webapp-chart.fullname" . }}-hpa
+  lables:
+    app.kubernetes.io/name: {{ include "webapp-chart.fullname" . }}
 spec:
+  scaleTragetRef:
+    apiVersion: app/v1
+    kind: Deployment
+    name: {{ include "webapp-chart.fullname" . }}
   minReplicas: {{ .Values.hpa.minReplicas }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:
