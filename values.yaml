@@ -43,19 +43,19 @@ liveness:
   initialDelaySeconds: 10
   periodSeconds: 10
   httpGet:
-    path: /health
+    path: /
     port: 80
 
 readiness:
   initialDelaySeconds: 10
   periodSeconds: 10
   httpGet:
-    path: /ready
+    path: /
     port: 80
 
 startup:
   initialDelaySeconds: 10
   periodSeconds: 10
   httpGet:
-    path: /startup
+    path: /
     port: 80
