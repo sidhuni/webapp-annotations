@@ -1,18 +1,25 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: webapp-app
+  name: your-demo-app
+  namespace: argocd
 spec:
   project: default
+
   source:
     repoURL: 'https://github.com/sidhuni/webapp-annotations.git'
-    targetRevision: main
-    path: webapp-chart
+    targetRevision: main        # or master or branch name
+    path: .    # folder where Chart.yaml exists
+    helm:
+      releaseName: chart-release
+
   destination:
     server: https://kubernetes.default.svc
     namespace: default
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-
+    syncOptions:
+      - CreateNamespace=true
