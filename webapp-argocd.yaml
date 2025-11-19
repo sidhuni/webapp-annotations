@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: webapp-app
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/YOUR-REPO/your-project.git'
+    targetRevision: main
+    path: webapp-chart
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+

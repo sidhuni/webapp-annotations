@@ -1,0 +1,61 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  host: webapp.local
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+config:
+  LOG_LEVEL: info
+  FEATURE_X_ENABLED: "true"
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  cpuUtilization: 75
+
+serviceAccount:
+  create: true
+  name: ""
+
+resources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+  requests:
+    cpu: "200m"
+    memory: "256Mi"
+
+
+liveness:
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  httpGet:
+    path: /health
+    port: 80
+
+readiness:
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  httpGet:
+    path: /ready
+    port: 80
+
+startup:
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  httpGet:
+    path: /startup
+    port: 80

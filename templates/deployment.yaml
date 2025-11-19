@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "webapp-chart.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "webapp-chart.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "webapp-chart.name" . }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      serviceAccountName: "{{ include "webapp-chart.serviceAccountName" . }}"
+
+      containers:
+        - name: webapp
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          ports:
+            - containerPort: {{ .Values.service.port }}
+
+          envFrom:
+            - configMapRef:
+                name: {{ include "webapp-chart.fullname" . }}
+
+          {{- if .Values.readiness }}
+          readinessProbe:
+            {{- toYaml .Values.readiness | nindent 12 }}
+          {{- end }}
+
+          {{- if .Values.liveness }}
+          livenessProbe:
+            {{- toYaml .Values.liveness | nindent 12 }}
+          {{- end }}
+
+          {{- if .Values.startup }}
+          startupProbe:
+            {{- toYaml .Values.startup | nindent 12 }}
+          {{- end }}
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
